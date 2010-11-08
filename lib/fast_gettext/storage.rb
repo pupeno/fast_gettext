@@ -85,18 +85,22 @@ module FastGettext
       @@caches
     end
 
+    def repository(domain = nil)
+      (translation_repositories[domain.nil? ? self.text_domain : domain]) || raise(NoTextDomainConfigured)
+    end
+
     def current_repository
-      translation_repositories[text_domain] || raise(NoTextDomainConfigured)
+      translation_repositories
     end
 
     def key_exist?(key)
       !!(cached_find key)
     end
 
-    def cached_find(key)
+    def cached_find(key, options = {})
       translation = current_cache[key]
       return translation if translation or translation == false #found or was not found before
-      current_cache[key] = current_repository[key] || false
+      current_cache[key] = repository(options[:domain])[key] || false
     end
 
     def cached_plural_find(*keys)

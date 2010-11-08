@@ -17,8 +17,8 @@ module FastGettext
       klas.extend self
     end
 
-    def _(key)
-      FastGettext.cached_find(key) or key
+    def _(key, options = {})
+      FastGettext.cached_find(key, options) or key
     end
 
     #translate pluralized
